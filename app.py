@@ -354,7 +354,13 @@ elif page == "🔍 Fraud Predictor":
 
     st.markdown("")
     if st.button("🔍 Analyze Transaction"):
-        input_data = np.array([[V1, V2, V3, V4, V5, Amount]])
+        # Build full feature vector to match real dataset dimensions
+        user_vals = [V1, V2, V3, V4, V5]
+        n_features = len(feature_cols)
+        # Fill remaining V features with 0, put Amount last
+        remaining = [0.0] * (n_features - len(user_vals) - 1)
+        all_vals = user_vals + remaining + [Amount]
+        input_data = np.array([all_vals])
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
         probability = model.predict_proba(input_scaled)[0][1]
